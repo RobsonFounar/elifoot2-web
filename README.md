@@ -13,9 +13,12 @@ A versão antiga do player continua disponível em `classic.html`.
 
 No ecrã de início escolhe o campeonato (cada um tem as suas gravações):
 
-- **Brasil 2026** (predefinido) — os 20 clubes da Série A 2026 + Ceará, Fortaleza, Juventude, Sport, Goiás,
-  América-MG, Criciúma, Avaí, Ponte Preta, Cuiabá, Atlético-GO e Náutico, em 4 divisões de 8,
-  com elencos atuais (Wikipedia, outubro 2026) e treinadores brasileiros. Ficheiro: `Elifoot_II_v1.21_BR.jsdos`.
+- **Brasil 2026** (predefinido) — 32 clubes em 4 divisões de 8, com elencos atuais (Wikipedia, outubro 2026)
+  e treinadores brasileiros. Ficheiro: `Elifoot_II_v1.21_BR.jsdos`.
+  - 1.ª divisão: Santos, Corinthians, São Paulo, Palmeiras, Flamengo, Fluminense, Vasco, Grêmio
+  - 2.ª divisão: Cruzeiro, Mirassol, Botafogo, Bahia, Bragantino, Atlético-MG, Vitória, Internacional
+  - 3.ª divisão: Coritiba, Athletico-PR, Chapecoense, Remo, Fortaleza, Ceará, Sport, Juventude
+  - 4.ª divisão: Goiás, América-MG, Criciúma, Avaí, Ponte Preta, Cuiabá, Atlético-GO, Náutico
 - **Portugal 1998/99** — os ficheiros originais. Ficheiro: `Elifoot_II_v1.21.jsdos`.
 
 Para atualizar os elencos: `python tools/fetch_squads.py squads.json` e depois
