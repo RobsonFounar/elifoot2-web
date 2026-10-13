@@ -3,13 +3,17 @@
 
 // Chave fixa para as gravações do js-dos: o bundle é criado como blob: (URL diferente em
 // cada visita), por isso mapeamos sempre para a mesma chave e as gravações sobrevivem.
-const SAVE_KEY = "elifoot2-v121-save";
-// Jogo incluído no site (o primeiro que existir é carregado automaticamente).
-const SERVER_GAMES = ["Elifoot_II_v1.21.jsdos", "game/Elifoot_II_v1.21.jsdos", "game/elifoot2.zip"];
+// Cada campeonato tem as suas próprias gravações.
+const SAVE_KEYS = { BR: "elifoot2-v121-br", PT: "elifoot2-v121-save", custom: "elifoot2-v121-custom" };
+// Jogos incluídos no site, por campeonato (o primeiro ficheiro que existir é usado).
+const LEAGUES = {
+  BR: ["Elifoot_II_v1.21_BR.jsdos", "game/Elifoot_II_v1.21_BR.jsdos"],
+  PT: ["Elifoot_II_v1.21.jsdos", "game/Elifoot_II_v1.21.jsdos", "game/elifoot2.zip"],
+};
 const EXEC_RE = /\.(exe|com|bat)$/i;
 
 const $ = (id) => document.getElementById(id);
-const state = { zip: null, source: "", ci: null, props: null, running: false };
+const state = { zip: null, source: "", league: "BR", ci: null, props: null, running: false };
 window.elifoot = state; // útil para depurar na consola
 
 // ---------- IndexedDB (guarda o zip do jogo neste browser) ----------
@@ -77,7 +81,7 @@ async function useZip(bytes, source, preferredExe) {
   $("play").disabled = false;
   $("forget").hidden = source !== "browser";
   $("dropText").innerHTML = "Jogo carregado ✔<br>Queres trocar? Arrasta outro zip ou";
-  setStatus(source === "server" ? "Elifoot II v1.21 pronto a jogar!" : "Pronto a jogar!");
+  setStatus("Pronto a jogar!");
 }
 
 async function onFile(file) {
@@ -171,7 +175,7 @@ $("play").addEventListener("click", async () => {
     mouseCapture: false,
     imageRendering: "pixelated",
     renderAspect: "4/3",
-    fsChanges: { local: true, urlToKey: async () => SAVE_KEY },
+    fsChanges: { local: true, urlToKey: async () => SAVE_KEYS[state.source === "browser" ? "custom" : state.league] },
     onEvent: (event, arg) => {
       if (event === "ci-ready") state.ci = arg;
     },
@@ -287,12 +291,32 @@ async function saveNow() {
   if (saved) {
     try { return await useZip(saved, "browser", await dbGet("exe")); } catch { await dbDel("zip"); }
   }
-  for (const url of SERVER_GAMES) {
-    try {
-      const res = await fetch(url, { cache: "no-cache" });
-      if (res.ok) return await useZip(new Uint8Array(await res.arrayBuffer()), "server");
-    } catch { /* não existe: tenta o seguinte, ou o utilizador escolhe um ficheiro */ }
-  }
+  let league = "BR";
+  try { league = localStorage.getItem("elifoot-league") || "BR"; } catch { /* sem storage */ }
+  if (await loadLeague(league)) return;
+  if (league !== "BR" && await loadLeague("BR")) return;
   setStatus("");
 })();
+
+async function loadLeague(league) {
+  for (const url of LEAGUES[league] || []) {
+    try {
+      const res = await fetch(url, { cache: "no-cache" });
+      if (!res.ok) continue;
+      state.league = league;
+      $("league").value = league;
+      $("leagueRow").hidden = false;
+      await useZip(new Uint8Array(await res.arrayBuffer()), "server");
+      return true;
+    } catch { /* não existe: tenta o seguinte */ }
+  }
+  return false;
+}
+
+$("league").addEventListener("change", async () => {
+  const league = $("league").value;
+  try { localStorage.setItem("elifoot-league", league); } catch { /* sem storage */ }
+  $("play").disabled = true;
+  if (!(await loadLeague(league))) setStatus("Este campeonato não está disponível.", true);
+});
 })();

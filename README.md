@@ -9,6 +9,19 @@
 Abre a página e carrega em **JOGAR**. Funciona no computador (teclado) e no telemóvel (barra de teclas tátil).
 A versão antiga do player continua disponível em `classic.html`.
 
+## Campeonatos
+
+No ecrã de início escolhe o campeonato (cada um tem as suas gravações):
+
+- **Brasil 2026** (predefinido) — os 20 clubes da Série A 2026 + Ceará, Fortaleza, Juventude, Sport, Goiás,
+  América-MG, Criciúma, Avaí, Ponte Preta, Cuiabá, Atlético-GO e Náutico, em 4 divisões de 8,
+  com elencos atuais (Wikipedia, outubro 2026) e treinadores brasileiros. Ficheiro: `Elifoot_II_v1.21_BR.jsdos`.
+- **Portugal 1998/99** — os ficheiros originais. Ficheiro: `Elifoot_II_v1.21.jsdos`.
+
+Para atualizar os elencos: `python tools/fetch_squads.py squads.json` e depois
+`python tools/build_br.py squads.json Elifoot_II_v1.21.jsdos Elifoot_II_v1.21_BR.jsdos`.
+Nota: o jogo verifica o tamanho exato de `EQUIPAS.EF2` e `TREINAD.EF2`; o script acerta-o com espaços.
+
 
 
 ## Como gravar
