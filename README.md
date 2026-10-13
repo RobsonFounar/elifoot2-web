@@ -2,6 +2,13 @@
 
 ![InitImage](./elifoot2-init.png)
 
+## Jogar
+
+**https://robsonfounar.github.io/elifoot2-web/**
+
+Abre a página e carrega em **JOGAR**. Funciona no computador (teclado) e no telemóvel (barra de teclas tátil).
+A versão antiga do player continua disponível em `classic.html`.
+
 
 
 ## Como gravar
@@ -16,22 +23,16 @@ depois, carregar no icon de disquete no topo esquerdo para proceder à gravaçã
 
 ## Combinações de teclas
 
-Todas as combinações de teclas são permitidas EXCEPTO o ALT+F4 (Treinadores).
+Quase todas as combinações funcionam diretamente com o teclado. As que o sistema/browser não deixa passar
+— sobretudo o **ALT+F4 (Treinadores)** — estão na barra de teclas (botão ⌨ no canto inferior direito):
 
-Esta combinação anula o controlo do teclado na aplicação pois sobrepoê-se à função de fechar o browser.
+- **Atalhos:** Alt+F1…F4, Ctrl+F1…F3, Shift+F1…F3.
+- **Alt / Ctrl / Shift:** um toque prende a tecla para a seguinte, dois toques bloqueiam, três soltam.
+- **ABC:** letras e números para combinações como Alt+letra.
+- F1–F12, Esc, Tab, setas, PgUp/PgDn, Enter, etc.
+- 💾 grava as alterações (o mesmo que o ícone de disquete).
 
-Para usar esta combinação específica, deve-se activar o modo mobile:
-
-```Barra lateral esquerda -> clicar no icon do olho com um traço por cima -> seleccionar telemóvel```
-
-Isto irá activar o layer de touch. Com esta layer activa:
-
-- os 10 butões superiores são o F1 ao F10.
-- os 3 butões inferiores direitos, ao lado do ESC, são o CTRL+F1 / F2 / F3
-- os 3 butões inferiores do lado esquerdo ACIMA dos 4 inferiores esquerdos são o SHIFT+F1 / F2 / F3
-- os 4 butões inferiores do lado esquerdo são o ALT+F1 / F2 / F3 / F4
-
-Para usar a função de TREINADORES do jogo, deve-se utilizar o botão touch da combinação em questão.
+No telemóvel a barra abre automaticamente.
 
 
 

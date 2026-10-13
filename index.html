@@ -1,40 +1,110 @@
 <!doctype html>
-<html lang="en">
-
+<html lang="pt">
 <head>
   <meta charset="utf-8">
-  <title>Elifoot II - v1.21</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="16x16">
-  <script src="js-dos.js"></script>
-  <script src="my.js"></script>
-  <link rel="stylesheet" href="js-dos.css">
-  <style>
-    #root {
-      width: auto;
-      height: 100vh;
-    }
-    body {
-      margin: 0;
-      background-color: #333;
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0000aa">
+  <title>Elifoot II Web</title>
+  <link rel="stylesheet" href="https://v8.js-dos.com/latest/js-dos.css">
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-  <div id="root"></div>
+  <!-- Ecrã de início -->
+  <main id="start" class="start">
+    <div class="panel">
+      <h1><span class="ball">⚽</span> ELIFOOT II <small>v1.21</small></h1>
+      <p class="sub">O clássico de gestão de futebol, a correr num emulador DOS no browser.</p>
 
-	<script>
-	Dos(document.getElementById("root")).run("Elifoot_II_v1.21.jsdos");
-	</script>
+      <div id="drop" class="drop">
+        <p id="dropText">Arrasta para aqui o <b>.zip</b> do Elifoot II<br>ou</p>
+        <label class="btn">Escolher ficheiro
+          <input id="file" type="file" accept=".zip,.jsdos,application/zip" hidden>
+        </label>
+      </div>
 
-<!--
-  <script>
-    window.onload = function() {
-        myinit(document.getElementById("root"))
-    }
-  </script>
--->
+      <div id="exeRow" class="row" hidden>
+        <label for="exe">Executável:</label>
+        <select id="exe"></select>
+      </div>
 
+      <p id="status" class="status"></p>
+
+      <div class="row actions">
+        <button id="play" class="btn big" disabled>▶ JOGAR</button>
+        <button id="forget" class="btn ghost" hidden>Esquecer jogo</button>
+      </div>
+
+      <details class="help">
+        <summary>Como jogar e gravar</summary>
+        <ul>
+          <li>O zip fica guardado neste browser: na próxima visita é só carregar em <b>JOGAR</b>.</li>
+          <li><b>Gravar:</b> dentro do jogo faz <b>Alt+F1 → Enter → Enter</b> e depois carrega no
+            <b>ícone de disquete</b> no canto superior esquerdo (ou no botão 💾 da barra).
+            Ao voltar, responde que sim a “Quer continuar um jogo?”.</li>
+          <li><b>Teclado:</b> quase todas as combinações funcionam diretamente. As que o sistema
+            não deixa passar — sobretudo <b>Alt+F4 (Treinadores)</b> — estão na barra de teclas ⌨, em “Atalhos”.</li>
+          <li><b>Telemóvel:</b> usa a barra de teclas. Alt, Ctrl e Shift ficam “presos” até carregares
+            na tecla seguinte (toque duplo = bloqueados).</li>
+        </ul>
+      </details>
+      <p class="foot">Precisas da tua própria cópia do Elifoot II. Nada é enviado para nenhum servidor.</p>
+    </div>
+  </main>
+
+  <!-- Jogo -->
+  <section id="game" class="game" hidden>
+    <div id="dos" class="dos"></div>
+  </section>
+
+  <!-- Barra de teclas -->
+  <button id="kbToggle" class="kb-toggle" hidden title="Teclas especiais">⌨</button>
+  <div id="keys" class="keys" hidden>
+    <div class="keys-row mods">
+      <button data-mod="342">Alt</button>
+      <button data-mod="341">Ctrl</button>
+      <button data-mod="340">Shift</button>
+      <button data-action="combos" class="hot">Atalhos</button>
+      <button data-action="abc">ABC</button>
+      <button data-action="save" title="Gravar alterações">💾</button>
+      <button data-action="hide" title="Esconder">✕</button>
+    </div>
+    <div class="keys-row">
+      <button data-key="256">Esc</button>
+      <button data-key="290">F1</button><button data-key="291">F2</button>
+      <button data-key="292">F3</button><button data-key="293">F4</button>
+      <button data-key="294">F5</button><button data-key="295">F6</button>
+      <button data-key="296">F7</button><button data-key="297">F8</button>
+      <button data-key="298">F9</button><button data-key="299">F10</button>
+      <button data-key="300">F11</button><button data-key="301">F12</button>
+    </div>
+    <div class="keys-row">
+      <button data-key="258">Tab</button>
+      <button data-key="259">⌫</button>
+      <button data-key="260">Ins</button><button data-key="261">Del</button>
+      <button data-key="268">Home</button><button data-key="269">End</button>
+      <button data-key="266">PgUp</button><button data-key="267">PgDn</button>
+      <button data-key="263">←</button><button data-key="265">↑</button>
+      <button data-key="264">↓</button><button data-key="262">→</button>
+      <button data-key="32">Espaço</button>
+      <button data-key="257" class="hot">Enter</button>
+    </div>
+    <div id="combos" class="keys-row combos">
+      <button data-combo="342+290" title="Gravar: Alt+F1, Enter, Enter">Alt+F1</button>
+      <button data-combo="342+291">Alt+F2</button>
+      <button data-combo="342+292">Alt+F3</button>
+      <button data-combo="342+293" class="hot" title="Treinadores">Alt+F4</button>
+      <button data-combo="341+290">Ctrl+F1</button>
+      <button data-combo="341+291">Ctrl+F2</button>
+      <button data-combo="341+292">Ctrl+F3</button>
+      <button data-combo="340+290">Shift+F1</button>
+      <button data-combo="340+291">Shift+F2</button>
+      <button data-combo="340+292">Shift+F3</button>
+    </div>
+    <div id="abc" class="keys-row abc" hidden></div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://v8.js-dos.com/latest/js-dos.js"></script>
+  <script src="app.js"></script>
 </body>
-
 </html>
