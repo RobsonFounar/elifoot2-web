@@ -8,7 +8,7 @@ const SAVE_KEYS = { BR: "elifoot2-v121-br", PT: "elifoot2-v121-save", custom: "e
 // Jogos incluídos no site, por campeonato (o primeiro ficheiro que existir é usado).
 const LEAGUES = {
   BR: ["Elifoot_II_v1.21_BR.jsdos", "game/Elifoot_II_v1.21_BR.jsdos"],
-  PT: ["Elifoot_II_v1.21.jsdos", "game/Elifoot_II_v1.21.jsdos", "game/elifoot2.zip"],
+  // Inglaterra, Espanha, Itália e Portugal (atuais) entram aqui quando estiverem prontos.
 };
 const EXEC_RE = /\.(exe|com|bat)$/i;
 
@@ -162,6 +162,8 @@ async function buildBundle() {
 // ---------- Arranque do emulador ----------
 $("play").addEventListener("click", async () => {
   $("play").disabled = true;
+  // depois de escolher no ecrã de início, a próxima visita volta a arrancar direto
+  if (location.search.includes("menu")) history.replaceState(null, "", location.pathname);
   setStatus("A preparar o jogo…");
   let bundle;
   try {
@@ -320,15 +322,12 @@ async function saveNow() {
   if (!ready) setStatus("");
 })();
 
-// Troca Brasil ⇄ Portugal: grava o jogo atual e recarrega a página com o outro campeonato.
+// Botão "Campeonato": grava o jogo e abre o ecrã de início para escolher o campeonato.
 async function switchLeague() {
-  const next = state.league === "PT" ? "BR" : "PT";
-  const name = next === "BR" ? "Brasil 2026" : "Portugal 1998/99";
-  if (!confirm(`Trocar para o campeonato ${name}? O jogo atual é gravado antes.`)) return;
+  if (!confirm("Abrir a escolha de campeonato? O jogo atual é gravado antes.")) return;
   try { await state.props?.save(); } catch { /* segue mesmo assim */ }
-  try { localStorage.setItem("elifoot-league", next); } catch { /* sem storage */ }
   state.running = false; // sem aviso de "sair da página"
-  location.reload();
+  location.search = "?menu";
 }
 
 async function loadLeague(league) {

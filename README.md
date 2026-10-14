@@ -14,7 +14,7 @@ A versão antiga do player continua disponível em `classic.html`.
 
 ## Campeonatos
 
-Troca de campeonato com o botão **Campeonato** na barra de teclas ⌨ (cada um tem as suas gravações):
+Escolhe o campeonato com o botão **Campeonato** na barra de teclas ⌨ (cada um terá as suas gravações):
 
 - **Brasil 2026** (predefinido) — 32 clubes em 4 divisões de 8, com elencos atuais (Wikipedia, outubro 2026)
   e treinadores brasileiros. Ficheiro: `Elifoot_II_v1.21_BR.jsdos`.
@@ -22,7 +22,9 @@ Troca de campeonato com o botão **Campeonato** na barra de teclas ⌨ (cada um 
   - 2.ª divisão: Cruzeiro, Mirassol, Botafogo, Bahia, Bragantino, Atlético-MG, Vitória, Internacional
   - 3.ª divisão: Coritiba, Athletico-PR, Chapecoense, Remo, Fortaleza, Ceará, Sport, Juventude
   - 4.ª divisão: Goiás, América-MG, Criciúma, Avaí, Ponte Preta, Cuiabá, Atlético-GO, Náutico
-- **Portugal 1998/99** — os ficheiros originais. Ficheiro: `Elifoot_II_v1.21.jsdos`.
+- **Em breve:** Inglaterra, Espanha, Itália e Portugal (temporadas atuais).
+
+O ficheiro original `Elifoot_II_v1.21.jsdos` continua no repositório só como base para gerar os campeonatos (`tools/build_br.py`).
 
 Para atualizar os elencos: `python tools/fetch_squads.py squads.json` e depois
 `python tools/build_br.py squads.json Elifoot_II_v1.21.jsdos Elifoot_II_v1.21_BR.jsdos`.
