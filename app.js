@@ -127,9 +127,23 @@ function dosboxConf(exe) {
   ].join("\r\n");
 }
 
+// Arranque limpo: no autoexec do pacote tira o texto do js-dos e o eco dos comandos,
+// e limpa o ecrã antes de abrir o jogo (só muda o dosbox.conf; os ficheiros do jogo ficam iguais).
+async function quietBundle(zip, bytes) {
+  const conf = await zip.file(".jsdos/dosbox.conf").async("string");
+  const i = conf.toLowerCase().indexOf("[autoexec]");
+  if (i < 0) return bytes;
+  const lines = conf.slice(i + 10).split(/\r?\n/).map((l) => l.trim()).filter(Boolean)
+    .filter((l) => !/^(echo|type)\b/i.test(l) && !/^@?echo (on|off)$/i.test(l));
+  const exe = lines.pop();
+  const auto = ["@echo off", ...lines, "cls", exe].join("\r\n");
+  zip.file(".jsdos/dosbox.conf", conf.slice(0, i) + "[autoexec]\r\n" + auto + "\r\n");
+  return zip.generateAsync({ type: "uint8array", compression: "STORE" });
+}
+
 async function buildBundle() {
   const { bytes, zip, isBundle } = state.zip;
-  if (isBundle) return bytes;
+  if (isBundle) return quietBundle(zip, bytes);
 
   // Os ficheiros que estão na pasta do executável passam para a raiz de C:,
   // assim não há problemas com nomes de pasta longos ou com espaços.
@@ -260,6 +274,8 @@ $("keys").addEventListener("pointerdown", (e) => {
   } else if (b.dataset.action === "abc") {
     $("abc").hidden = !$("abc").hidden;
     showKeys(true);
+  } else if (b.dataset.action === "league") {
+    switchLeague();
   } else if (b.dataset.action === "save") {
     saveNow();
   } else if (b.dataset.action === "hide") {
@@ -286,17 +302,34 @@ async function saveNow() {
 }
 
 // ---------- Carregamento inicial ----------
+// O jogo arranca direto, sem ecrã de início. O ecrã só aparece se não houver jogo
+// disponível ou se o endereço tiver ?menu (para escolher outro zip, por exemplo).
 (async () => {
-  const saved = await dbGet("zip");
-  if (saved) {
-    try { return await useZip(saved, "browser", await dbGet("exe")); } catch { await dbDel("zip"); }
-  }
-  let league = "BR";
-  try { league = localStorage.getItem("elifoot-league") || "BR"; } catch { /* sem storage */ }
-  if (await loadLeague(league)) return;
-  if (league !== "BR" && await loadLeague("BR")) return;
-  setStatus("");
+  const showMenu = new URLSearchParams(location.search).has("menu");
+  const ready = await (async () => {
+    const saved = await dbGet("zip");
+    if (saved) {
+      try { await useZip(saved, "browser", await dbGet("exe")); return true; } catch { await dbDel("zip"); }
+    }
+    let league = "BR";
+    try { league = localStorage.getItem("elifoot-league") || "BR"; } catch { /* sem storage */ }
+    return (await loadLeague(league)) || (league !== "BR" && (await loadLeague("BR")));
+  })();
+  if (ready && !showMenu) { $("play").click(); return; }
+  $("start").hidden = false;
+  if (!ready) setStatus("");
 })();
+
+// Troca Brasil ⇄ Portugal: grava o jogo atual e recarrega a página com o outro campeonato.
+async function switchLeague() {
+  const next = state.league === "PT" ? "BR" : "PT";
+  const name = next === "BR" ? "Brasil 2026" : "Portugal 1998/99";
+  if (!confirm(`Trocar para o campeonato ${name}? O jogo atual é gravado antes.`)) return;
+  try { await state.props?.save(); } catch { /* segue mesmo assim */ }
+  try { localStorage.setItem("elifoot-league", next); } catch { /* sem storage */ }
+  state.running = false; // sem aviso de "sair da página"
+  location.reload();
+}
 
 async function loadLeague(league) {
   for (const url of LEAGUES[league] || []) {

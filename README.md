@@ -1,4 +1,6 @@
-# Elifoot II v1.21 Web
+# Rachão Manager
+
+Gestão de futebol à moda antiga no browser, num emulador DOS (js-dos). Baseado no **Elifoot II v1.21**, de André Elias.
 
 ![InitImage](./elifoot2-init.png)
 
@@ -6,12 +8,13 @@
 
 **https://robsonfounar.github.io/elifoot2-web/**
 
-Abre a página e carrega em **JOGAR**. Funciona no computador (teclado) e no telemóvel (barra de teclas tátil).
+Abre a página e o jogo arranca sozinho. Funciona no computador (teclado) e no telemóvel (barra de teclas tátil).
+Para ver o ecrã de início (por exemplo, para carregar outro zip), abre o endereço com `?menu` no fim.
 A versão antiga do player continua disponível em `classic.html`.
 
 ## Campeonatos
 
-No ecrã de início escolhe o campeonato (cada um tem as suas gravações):
+Troca de campeonato com o botão **Campeonato** na barra de teclas ⌨ (cada um tem as suas gravações):
 
 - **Brasil 2026** (predefinido) — 32 clubes em 4 divisões de 8, com elencos atuais (Wikipedia, outubro 2026)
   e treinadores brasileiros. Ficheiro: `Elifoot_II_v1.21_BR.jsdos`.
